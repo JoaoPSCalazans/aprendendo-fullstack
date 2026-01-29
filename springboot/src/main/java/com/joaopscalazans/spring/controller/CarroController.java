@@ -24,7 +24,7 @@ public class CarroController {
     @Autowired
     private CarroService carroService;
 
-@PostMapping("/save")
+@PostMapping
 public ResponseEntity<String> save(@RequestBody Carro carro) {
     try {
         String message = this.carroService.save(carro);
@@ -34,7 +34,7 @@ public ResponseEntity<String> save(@RequestBody Carro carro) {
     }
 }
 
-@GetMapping("/findById/{id}")
+@GetMapping("/{id}")
 public ResponseEntity<Carro> findById(@PathVariable int id) {
     try {
         Carro carro = carroService.findById(id);
