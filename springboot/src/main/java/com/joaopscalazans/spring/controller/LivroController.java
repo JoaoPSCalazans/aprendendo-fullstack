@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joaopscalazans.spring.entity.Livro;
 import com.joaopscalazans.spring.service.LivroService;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +36,9 @@ public class LivroController {
 
     // Read
     @GetMapping
-    public ResponseEntity<List<Livro>> findAll() {
+    public ResponseEntity<Iterable<Livro>> findAll() {
         try {
-            List<Livro> livros = livroService.findAll();
+            Iterable<Livro> livros = livroService.findAll();
             return new ResponseEntity<>(livros, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -48,7 +46,7 @@ public class LivroController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Livro> findById(@PathVariable int id) {
+    public ResponseEntity<Livro> findById(@PathVariable Long id) {
         try {
             Livro livro = livroService.findById(id);
             return new ResponseEntity<>(livro, HttpStatus.OK);
@@ -58,7 +56,7 @@ public class LivroController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable int id, @RequestBody Livro livro) {
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody Livro livro) {
         try {
             String messagem = livroService.update(id, livro);
             return new ResponseEntity<>(messagem, HttpStatus.OK);
@@ -68,13 +66,10 @@ public class LivroController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         try {
-          if( livroService.delete(id))
-            return new ResponseEntity<>(HttpStatus.OK);
-        else{
-            throw new Exception();
-        }
+            livroService.delete(id);
+            return ResponseEntity.ok("Livro deletado");
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

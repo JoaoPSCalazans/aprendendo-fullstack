@@ -1,6 +1,6 @@
 package com.joaopscalazans.spring.service;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,29 +15,34 @@ public class LivroService {
     private LivroRepository livroRepository;
 
     public void create(Livro livro){
-         livroRepository.create(livro);
+         livroRepository.save(livro);
     }
 
-    public List<Livro> findAll(){
-            List<Livro> lista = livroRepository.findAll();
-            return lista;
+    public Iterable<Livro> findAll(){
+            Iterable<Livro> livros = livroRepository.findAll();
+            return livros;
     }
 
-    public Livro findById(int id){
-            Livro livro = livroRepository.findById(id);
-            return livro;
+    public Livro findById(Long id){
+            Optional<Livro> livro = livroRepository.findById(id);
+            return livro.get();
     }
 
-    public String update(int id,Livro livro){
-            if (livroRepository.update(id, livro)) {
-                return "livro atualizado!";
-            }else{
-                return "Problema ao atualizar o livro";
-            }
+    public String update(Long id,Livro source){
+        Livro target = livroRepository.findById(id).get();
+        target.setTitulo(source.getTitulo());
+        target.setAno(source.getAno());
+        target.setEditora(source.getEditora());
+        target.setAutor(source.getAutor());
+
+
+        livroRepository.save(target);
+         return "ok";
     }
 
-    public boolean delete(int id){
-          return livroRepository.delete(id);
+    public String delete(Long id){
+           livroRepository.deleteById(id);;
+           return"ok";
 
 }
 }
